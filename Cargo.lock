@@ -1847,7 +1847,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-graphQl-markdown-server"
+name = "rust-graphql-markdown-server"
 version = "0.1.0"
 dependencies = [
  "actix-cors",

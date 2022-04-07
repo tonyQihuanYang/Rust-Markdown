@@ -1,8 +1,9 @@
-use config::{Config, ConfigError};
+use config::{Config, ConfigError, File};
 use serde::Deserialize;
 
 const DEVELOPMENT: &str= "Development";
 const PRODUCTION: &str = "Production";
+const DOCKER_PRODUCTION: &str = "DockerPro";
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct ServerSetting {
@@ -29,8 +30,7 @@ pub fn get_setting() -> Result<Settings, ConfigError> {
     println!("Currently running in enviroment {}", cur_env);
 
     let settings = Config::builder()
-        // Add in `./Settings.toml`
-        .add_source(config::File::with_name(&cur_config_path))
+        .add_source(File::with_name(&cur_config_path))
         // Add in settings from the environment (with a prefix of APP)
         // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
         .add_source(config::Environment::with_prefix("APP"))
@@ -57,7 +57,9 @@ fn get_config_path(cur_env: &str) -> String {
     let path = match cur_env {
         DEVELOPMENT => "./configs/development",
         PRODUCTION=> "./configs/production",
-        _ => "./configs/development",
+        DOCKER_PRODUCTION => "/usr/src/configs/docker_production",
+        _ => "/configs/development",
     };
+    println!("The current directory is {}", path);
     return path.to_string();
 }

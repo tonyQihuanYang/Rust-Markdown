@@ -1,6 +1,6 @@
 [server]
-url = "127.0.0.1"
-port = 8081
+url = "0.0.0.0"
+port = 8082
 
 [database]
 url= "mongodb+srv://tonyqihuanyang:F7LY36fwvIXM6VDx@cluster0.mczne.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
