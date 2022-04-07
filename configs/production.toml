@@ -1,7 +1,0 @@
-[server]
-url = "127.0.0.1"
-port = 8081
-
-[database]
-url= "mongodb+srv://tonyqihuanyang:F7LY36fwvIXM6VDx@cluster0.mczne.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-database_name = "markdown-pro"

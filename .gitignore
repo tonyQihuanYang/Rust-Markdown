@@ -1,1 +1,3 @@
 /target
+/configs/docker_production.toml
+/configs/production.toml
