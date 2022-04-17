@@ -4,7 +4,6 @@ use mongodb::bson::{doc, Bson, Document};
 use mongodb::options::FindOptions;
 
 use crate::MONGO_DB;
-use crate::db::DB;
 use crate::graphql_models::markdown::{
     MarkDownId, Markdown, MarkdownGraphQl, MarkdownInput, MarkdownUpdateInput,
 };
