@@ -1,4 +1,5 @@
 # Libraries
+
 - Used for graphQL[juniper](https://github.com/graphql-rust/juniper)
 - Used for serve GraphQL[actix](https://actix.rs/)
 
@@ -15,10 +16,10 @@
 
 ---
 
-
 ## CMDs
 
 ##### Run in development
+
 ```bash
 cargo watch -c -x run
 RUN_ENV=Development cargo watch -c -x run
@@ -32,11 +33,21 @@ RUN_ENV=DockerPro cargo run
 RUN_ENV=DockerPro /Users/tony/Desktop/Git/rust-graphQl-markdown-server/target/release/rust-graphql-markdown-server
 ```
 
-## Docker
-[Ref](https://dev.to/rogertorres/first-steps-with-docker-rust-30oi)
-[Good Ref](https://kerkour.com/deploy-rust-on-heroku-with-docker)
+###### Run in production
+
+- Create `production.toml` under `\configs`
+
 ```
-docker build -t rust-graphql-markdown-server . 
+./start.sh
+```
+
+## Docker
+
+- [Ref](https://dev.to/rogertorres/first-steps-with-docker-rust-30oi)
+- [Good Ref](https://kerkour.com/deploy-rust-on-heroku-with-docker)
+
+```
+docker build -t rust-graphql-markdown-server .
 docker images
 docker run rust-graphql-markdown-server
 docker run -dp 8081:3030 --rm --name markdown-server rust-graphql-markdown-server
@@ -47,6 +58,7 @@ docker stop markdown-server
 ---
 
 ### GraphQL
+
 ```
 query AllMarkdown {
   allMarkdowns {
@@ -90,3 +102,4 @@ mutation deleteMarkdown{
 
 
 ```
+
