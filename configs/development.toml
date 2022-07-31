@@ -1,7 +1,14 @@
 [server]
-url = "127.0.0.1"
+url = "0.0.0.0"
 port = 8081
+
+[api_server]
+url = "0.0.0.0"
+port = 8082
 
 [database]
 url= "mongodb://127.0.0.1:27017"
 database_name = "markdown-dev"
+
+[auth]
+secret_key="gummui"

@@ -3,11 +3,11 @@ use juniper::{EmptySubscription, RootNode};
 use mongodb::bson::{doc, Bson, Document};
 use mongodb::options::FindOptions;
 
-use crate::MONGO_DB;
-use crate::graphql_models::markdown::{
+use super::models::markdown::{
     MarkDownId, Markdown, MarkdownGraphQl, MarkdownInput, MarkdownUpdateInput,
 };
-use crate::graphql_utils::CustomError;
+use super::utils::graphql_errors::CustomError;
+use crate::MONGO_DB;
 use futures::stream::TryStreamExt;
 pub struct QueryRoot;
 
@@ -15,8 +15,6 @@ pub struct QueryRoot;
 #[juniper::graphql_object]
 impl QueryRoot {
     async fn markdown_by_id(id: String) -> Result<Option<MarkdownGraphQl>, CustomError> {
-        // let client = DB::connect().await;
-        // let database = client.database;
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
         let filter = doc! {"id":id.to_owned()};
@@ -27,8 +25,6 @@ impl QueryRoot {
     }
 
     async fn allMarkdowns() -> FieldResult<Vec<MarkdownGraphQl>> {
-        // let client = DB::connect().await;
-        // let database = client.database;
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
         let find_options = FindOptions::builder()
@@ -61,8 +57,6 @@ impl MutationRoot {
     }
 
     async fn delete_markdown(id: String) -> Result<MarkDownId, CustomError> {
-        // // let client = DB::connect().await;
-        // let database = client.database;
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
         let filter = doc! {"id":id.to_owned()};
@@ -73,8 +67,6 @@ impl MutationRoot {
     }
 
     async fn update_markdown(input: MarkdownUpdateInput) -> Result<MarkDownId, CustomError> {
-        // let client = DB::connect().await;
-        // let database = client.database;
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
         let filter = doc! {"id":input.id.to_owned()};
