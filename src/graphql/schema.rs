@@ -4,7 +4,7 @@ use mongodb::bson::{doc, Bson, Document};
 use mongodb::options::FindOptions;
 
 use super::models::markdown::{
-    MarkDownId, Markdown, MarkdownGraphQl, MarkdownInput, MarkdownUpdateInput,
+    MarkDownId, Markdown, MarkdownGraphQl, MarkdownInput, MarkdownUpdateInput, MarkdownUpdated,
 };
 use super::utils::graphql_errors::CustomError;
 use crate::MONGO_DB;
@@ -48,10 +48,6 @@ impl MutationRoot {
             context: new_markdown.context.to_owned(),
         });
 
-        let mut time_option = Document::new();
-        time_option.insert("created_datetime", Bson::Boolean(true));
-        time_option.insert("update_datetime", Bson::Boolean(true));
-
         collection.insert_one(created.clone(), None).await?;
         Ok(created)
     }
@@ -66,10 +62,11 @@ impl MutationRoot {
         }
     }
 
-    async fn update_markdown(input: MarkdownUpdateInput) -> Result<MarkDownId, CustomError> {
+    async fn update_markdown(input: MarkdownUpdateInput) -> Result<MarkdownGraphQl, CustomError> {
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
         let filter = doc! {"id":input.id.to_owned()};
+
         let mut update = Document::new();
         if let Some(title) = input.title {
             update.insert("title", Bson::String(title));
@@ -82,17 +79,21 @@ impl MutationRoot {
         let mut time_option = Document::new();
         time_option.insert("updated_datetime", Bson::Boolean(true));
 
+        let mut version_option = Document::new();
+        version_option.insert("version", Bson::Int32(1));
+
         match collection
-            .update_one(
+            .find_one_and_update(
                 filter,
-                doc! {"$currentDate": time_option, "$set": update},
+                doc! {"$currentDate": time_option, "$inc": version_option, "$set": update},
                 None,
             )
             .await
         {
-            Ok(_) => Ok(MarkDownId {
-                id: input.id.to_owned(),
-            }),
+            Ok(result) => match result {
+                Some(updated) => Ok(updated),
+                None => Err(CustomError::ItemNotFound),
+            },
             Err(_) => Err(CustomError::UnexectedError),
         }
     }
