@@ -1,7 +1,7 @@
 use juniper::FieldResult;
 use juniper::{EmptySubscription, RootNode};
 use mongodb::bson::{doc, Bson, Document};
-use mongodb::options::FindOptions;
+use mongodb::options::{FindOneAndUpdateOptions, FindOptions, ReturnDocument};
 
 use super::models::markdown::{
     MarkDownId, Markdown, MarkdownGraphQl, MarkdownInput, MarkdownUpdateInput, MarkdownUpdated,
@@ -65,7 +65,7 @@ impl MutationRoot {
     async fn update_markdown(input: MarkdownUpdateInput) -> Result<MarkdownGraphQl, CustomError> {
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");
-        let filter = doc! {"id":input.id.to_owned()};
+        let filter = doc! {"id":input.id.to_owned(), "version": input.version.to_owned()};
 
         let mut update = Document::new();
         if let Some(title) = input.title {
@@ -82,11 +82,15 @@ impl MutationRoot {
         let mut version_option = Document::new();
         version_option.insert("version", Bson::Int32(1));
 
+        // .return_document(true).build();
+
         match collection
             .find_one_and_update(
                 filter,
                 doc! {"$currentDate": time_option, "$inc": version_option, "$set": update},
-                None,
+                FindOneAndUpdateOptions::builder()
+                    .return_document(ReturnDocument::After)
+                    .build(),
             )
             .await
         {
