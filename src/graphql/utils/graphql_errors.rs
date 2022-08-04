@@ -2,6 +2,7 @@ use juniper::{graphql_value, FieldError, IntoFieldError, ScalarValue};
 
 pub enum CustomError {
     UnexectedError,
+    ItemNotFound,
 }
 
 impl<S: ScalarValue> IntoFieldError<S> for CustomError {
@@ -11,6 +12,12 @@ impl<S: ScalarValue> IntoFieldError<S> for CustomError {
                 "Unexpected error",
                 graphql_value!({
                     "type": "UNEXPECTED-ERROR"
+                }),
+            ),
+            CustomError::ItemNotFound => FieldError::new(
+                "Item not found",
+                graphql_value!({
+                    "type": "ITEM-NOT-FOUND"
                 }),
             ),
         }

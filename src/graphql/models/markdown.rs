@@ -21,6 +21,7 @@ pub struct MarkdownInput {
 #[graphql(description = "Markdown input, for update")]
 pub struct MarkdownUpdateInput {
     pub id: String,
+    pub version: i32,
     pub title: Option<String>,
     pub context: Option<String>,
 }
@@ -32,9 +33,17 @@ pub struct MarkDownId {
 }
 
 #[derive(GraphQLObject, Debug, Serialize, Deserialize, Clone)]
+#[graphql(description = "Updated Markdown result, the markdown id and version")]
+pub struct MarkdownUpdated {
+    pub id: String,
+    pub version: i32,
+}
+
+#[derive(GraphQLObject, Debug, Serialize, Deserialize, Clone)]
 #[graphql(description = "Markdown result, the markdown stored in the mongo db")]
 pub struct MarkdownGraphQl {
     pub id: String,
+    pub version: i32,
     pub title: String,
     pub context: String,
     #[serde(with = "bson::serde_helpers::chrono_datetime_as_bson_datetime")]
@@ -48,6 +57,7 @@ impl MarkdownGraphQl {
         let now = Utc::now();
         Self {
             id: nanoid!(10),
+            version: 1,
             title: mardown.title,
             context: mardown.context,
             created_datetime: now,

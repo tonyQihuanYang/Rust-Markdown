@@ -9,7 +9,11 @@ use actix_web::{
 use actix_web_lab::respond::Html;
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
-use crate::{graphql_schema::{create_schema, Schema}, CONFIG, setting::{ServerSetting}};
+use crate::{
+    graphql::schema::{create_schema, Schema},
+    setting::ServerSetting,
+    CONFIG,
+};
 
 /// GraphiQL playground UI
 #[get("/graphiql")]
@@ -26,11 +30,11 @@ async fn graphql(st: web::Data<Schema>, data: web::Json<GraphQLRequest>) -> impl
 
 #[actix_web::main]
 pub async fn connect() -> io::Result<()> {
-    let ServerSetting {url, port} = &CONFIG.server;
+    let ServerSetting { url, port } = &CONFIG.server;
     // Create Juniper schema
     let schema = Arc::new(create_schema());
     // Start HTTP server
-    
+
     log::info!("GraphiQL playground: {}/graphiql", url);
     log::info!("starting HTTP server on port {}", port);
 
