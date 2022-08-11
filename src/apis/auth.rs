@@ -1,43 +1,16 @@
+use crate::models::User::{LoginCredentials, User};
+use crate::MONGO_DB;
 use actix_session::Session;
 use actix_web::{error::InternalError, web, Error, HttpResponse, Responder};
-
-use serde::{Deserialize, Serialize};
-
-#[derive(Deserialize)]
-pub struct Credentials {
-    username: String,
-    password: String,
-}
-
-#[derive(Serialize)]
-struct User {
-    id: i64,
-    username: String,
-    password: String,
-}
-
-impl User {
-    fn authenticate(credentials: Credentials) -> Result<Self, HttpResponse> {
-        // TODO: figure out why I keep getting hacked
-        if &credentials.password != "hunter2" {
-            return Err(HttpResponse::Unauthorized().json("Unauthorized"));
-        }
-
-        Ok(User {
-            id: 42,
-            username: credentials.username,
-            password: credentials.password,
-        })
-    }
-}
+use mongodb::bson::{doc, Bson, Document};
 
 pub async fn login(
-    credentials: web::Json<Credentials>,
+    credentials: web::Json<LoginCredentials>,
     session: Session,
 ) -> Result<impl Responder, Error> {
     let credentials = credentials.into_inner();
 
-    match User::authenticate(credentials) {
+    match User::authenticate(credentials).await {
         Ok(user) => session.insert("user_id", user.id).unwrap(),
         Err(err) => return Err(InternalError::from_response("", err).into()),
     };

@@ -6,6 +6,7 @@ use actix_web::{
 
 use crate::apis::auth::login;
 use crate::apis::auth::secret;
+use crate::apis::register::register;
 use crate::{setting::ServerSetting, CONFIG};
 
 #[actix_web::main]
@@ -29,6 +30,7 @@ pub async fn connect() -> std::io::Result<()> {
             )
             .default_service(web::to(|| HttpResponse::Ok()))
             .route("/login", web::post().to(login))
+            .route("/register", web::post().to(register))
             .route("/secret", web::get().to(secret))
     })
     .bind((url.to_owned(), port.to_owned()))?
