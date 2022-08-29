@@ -1,18 +1,18 @@
 # Libraries
 
-- Used for graphQL[juniper](https://github.com/graphql-rust/juniper)
-- Used for serve GraphQL[actix](https://actix.rs/)
+- Used for graphQL [juniper](https://github.com/graphql-rust/juniper)
+- Used for serve GraphQL [actix](https://actix.rs/)
 
-- Used for connect mongoDB[mongo-rust-driver](https://github.com/mongodb/mongo-rust-driver)
-- Required for `mongo-rust-driver`[futures](https://docs.rs/futures/latest/futures/)
-- Used for deserialize mongoDB result[serde](https://serde.rs/)
+- Used for connect mongoDB [mongo-rust-driver](https://github.com/mongodb/mongo-rust-driver)
+- Required for `mongo-rust-driver` [futures](https://docs.rs/futures/latest/futures/)
+- Used for deserialize mongoDB result [serde](https://serde.rs/)
 
-- Used for the env[config](https://github.com/mehcode/config-rs)
+- Used for the env [config](https://github.com/mehcode/config-rs)
 
-- Used for generate UTC datetime[chrono](https://docs.rs/chrono/latest/chrono/)
+- Used for generate UTC datetime [chrono](https://docs.rs/chrono/latest/chrono/)
 - Covert `Chrono` DateTime to MongoDB DateTime, and accept by the `juniper` [bson](https://docs.rs/bson/latest/bson/)
 
-- Used for generate Id[nanoid](https://docs.rs/nanoid/latest/nanoid/)
+- Used for generate Id [nanoid](https://docs.rs/nanoid/latest/nanoid/)
 
 ---
 
@@ -102,4 +102,3 @@ mutation deleteMarkdown{
 
 
 ```
-
