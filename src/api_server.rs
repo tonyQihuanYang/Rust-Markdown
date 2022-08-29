@@ -1,10 +1,10 @@
-use crate::apis::{auth::actions::login::login_post, auth::actions::register::register, point};
+use crate::apis::{auth, point};
 use crate::{setting::ServerSetting, CONFIG};
 use actix_cors::Cors;
 use actix_session::{storage::RedisActorSessionStore, SessionMiddleware};
 use actix_web::{
     cookie::{Key, SameSite},
-    http, web, App, HttpServer,
+    http, App, HttpServer,
 };
 
 #[actix_web::main]
@@ -17,7 +17,6 @@ pub async fn connect() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:8080")
-            // .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
             .allowed_methods(vec!["OPTIONS", "GET", "POST"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
             .allowed_header(http::header::CONTENT_TYPE)
@@ -37,11 +36,8 @@ pub async fn connect() -> std::io::Result<()> {
                 .build(),
             )
             // .default_service(web::to(|| HttpResponse::Ok()))
-            .route("/auth/login", web::post().to(login_post))
-            .route("/auth/register", web::post().to(register))
-            // .route("/auth/authenticate", web::get().to(secret))
-            .configure(point::route::config_point_router);
-        // .route("/transfer", web::post().to(transfer_post));
+            .configure(auth::route::config_routes)
+            .configure(point::route::config_routes);
         return service;
     })
     .bind((url.to_owned(), port.to_owned()))?

@@ -1,11 +1,7 @@
 use actix_session::Session;
 use actix_web::{post, web, HttpResponse};
 
-use crate::{
-    apis::point::services::transfer_service::transfer_point,
-    models::user::{User, UserId},
-};
-use mongodb::bson;
+use crate::apis::point::services::transfer_service::transfer_point;
 
 #[post("/{transfer_to}/{point}")]
 pub async fn transfer_post(session: Session, path: web::Path<(String, i64)>) -> HttpResponse {
