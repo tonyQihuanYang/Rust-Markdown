@@ -1,3 +1,5 @@
 /target
 /configs/docker_production.toml
 /configs/production.toml
+
+.DS_Store
