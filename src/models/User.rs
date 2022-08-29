@@ -10,14 +10,30 @@ pub struct LoginCredentials {
     pub password: String,
 }
 
+pub type UserId = bson::oid::ObjectId;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
-    pub id: i64,
+    #[serde(rename = "_id")]
+    pub id: bson::oid::ObjectId,
+    // pub id: i64,
     pub username: String,
     pub password: String,
 }
 
 impl User {
+    pub fn new(username: String, password: String) -> Self {
+        Self {
+            id: bson::oid::ObjectId::new(),
+            username,
+            password,
+        }
+    }
+
+    pub fn get_id_string(self) -> String {
+        bson::oid::ObjectId::to_hex(self.id.clone())
+    }
+
     pub async fn authenticate(credentials: LoginCredentials) -> Result<Self, HttpResponse> {
         let hashed_password = encode(&credentials.password);
 
@@ -28,7 +44,7 @@ impl User {
         match collection.find_one(filter, None).await {
             Ok(result) => match result {
                 Some(user_found) => Ok(User {
-                    id: 42,
+                    id: bson::oid::ObjectId::new(),
                     username: user_found.username,
                     password: user_found.password,
                 }),

@@ -1,1 +1,2 @@
-pub mod User;
+pub mod point;
+pub mod user;
