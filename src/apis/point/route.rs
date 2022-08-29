@@ -1,15 +1,7 @@
-use actix_web::{post, web, HttpResponse};
-
-// #[post("/point/transfer/{transfer_to}/{points}")]
-// async fn user_detail(path: web::Path<(u32,)>) -> HttpResponse {
-//     HttpResponse::Ok().body(format!("User detail: {}", path.into_inner().0))
-// }
-//
-
 use super::actions::transfer;
+use actix_web::web;
 
-pub fn config_point_router(cfg: &mut web::ServiceConfig) {
-    // domain includes: /products/{product_id}/parts/{part_id}
+pub fn config_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/points")
             // .service(

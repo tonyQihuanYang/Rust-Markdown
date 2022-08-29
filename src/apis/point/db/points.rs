@@ -1,5 +1,4 @@
 use crate::models::point::Point;
-use crate::models::user::UserId;
 use crate::MONGO_DB;
 use mongodb::bson::doc;
 use mongodb::options::FindOneAndUpdateOptions;
