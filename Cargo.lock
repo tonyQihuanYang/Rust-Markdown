@@ -2078,6 +2078,7 @@ dependencies = [
  "actix-session",
  "actix-web",
  "actix-web-lab",
+ "base64",
  "bson 2.1.0",
  "chrono",
  "config",

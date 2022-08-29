@@ -4,6 +4,7 @@ extern crate lazy_static;
 mod db;
 mod graphql;
 mod graphql_server;
+mod models;
 mod setting;
 
 mod api_server;
