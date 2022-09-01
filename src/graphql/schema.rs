@@ -12,8 +12,38 @@ use futures::stream::TryStreamExt;
 pub struct QueryRoot;
 
 // TODO: Should create a handler folder for these functions...
+struct MarkdownQuery;
+#[juniper::graphql_object]
+impl MarkdownQuery {
+    async fn markdown_by_id(id: String) -> Result<Option<MarkdownGraphQl>, CustomError> {
+        let database = MONGO_DB.get().unwrap();
+        let collection = database.collection::<MarkdownGraphQl>("markdown");
+        let filter = doc! {"id":id.to_owned()};
+        match collection.find_one(filter, None).await {
+            Ok(markdown_found) => Ok(markdown_found),
+            Err(_) => Err(CustomError::UnexectedError),
+        }
+    }
+
+    async fn allMarkdowns() -> FieldResult<Vec<MarkdownGraphQl>> {
+        let database = MONGO_DB.get().unwrap();
+        let collection = database.collection::<MarkdownGraphQl>("markdown");
+        let find_options = FindOptions::builder()
+            .sort(doc! { "updated_datetime": 1 })
+            .build();
+        let cursor = collection.find(None, find_options).await?;
+        let markdowns: Vec<MarkdownGraphQl> = cursor.try_collect().await?;
+        Ok(markdowns)
+    }
+}
+
 #[juniper::graphql_object]
 impl QueryRoot {
+    pub fn markdown(&self) -> MarkdownQuery {
+        MarkdownQuery
+    }
+
+    // In order to keep the current version of Client code working, will keep these code
     async fn markdown_by_id(id: String) -> Result<Option<MarkdownGraphQl>, CustomError> {
         let database = MONGO_DB.get().unwrap();
         let collection = database.collection::<MarkdownGraphQl>("markdown");

@@ -1,15 +1,11 @@
-use super::actions::transfer;
+use super::actions::{points_action, transfer_action};
 use actix_web::web;
 
 pub fn config_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/points")
-            // .service(
-            //     web::resource("")
-            //         .route(web::get().to(products::get_products))
-            //         .route(web::post().to(products::add_product)),
-            // )
-            .service(web::scope("/transfer").service(transfer::transfer_post)),
+            .service(points_action::get_points)
+            .service(web::scope("/transfer").service(transfer_action::transfer_post)),
     );
 }
 
