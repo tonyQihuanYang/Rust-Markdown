@@ -5,6 +5,7 @@ pub fn config_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/points")
             .service(points_action::get_points)
+            .service(points_action::get_points_with_user_info)
             .service(web::scope("/transfer").service(transfer_action::transfer_post)),
     );
 }
