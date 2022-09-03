@@ -8,11 +8,11 @@ use actix_web::{
 };
 
 #[actix_web::main]
-pub async fn connect() -> std::io::Result<()> {
+pub async fn connect(secret_key: Key) -> std::io::Result<()> {
     // let AuthSetting { secret_key } = &CONFIG.auth;
     let ServerSetting { url, port } = &CONFIG.api_server;
     log::info!("API Server Connecting on URL {}:{}", url, port);
-    let secret_key = Key::generate();
+    // let secret_key = Key::generate();
 
     HttpServer::new(move || {
         let cors = Cors::default()

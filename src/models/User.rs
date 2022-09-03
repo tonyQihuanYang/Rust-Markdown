@@ -29,3 +29,10 @@ impl User {
         bson::oid::ObjectId::to_hex(self.id.clone())
     }
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct GeneralUserInformation {
+    #[serde(rename = "_id")]
+    pub id: bson::oid::ObjectId,
+    pub username: String,
+}

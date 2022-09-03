@@ -12,6 +12,7 @@ mod apis;
 
 use std::thread::{self, JoinHandle};
 
+use actix_web::cookie::Key;
 use db::connect_to_db;
 use mongodb::Database;
 use once_cell::sync::OnceCell;
@@ -31,17 +32,19 @@ async fn main() {
     let mongo_db = connect_to_db().await;
     MONGO_DB.set(mongo_db).unwrap();
 
+    let secret_key = Key::generate();
+
     let mut threads: Vec<thread::JoinHandle<()>> = Vec::new();
-    threads.push(spawn_graphql_server());
-    threads.push(spawn_api_server());
+    threads.push(spawn_graphql_server(secret_key.clone()));
+    threads.push(spawn_api_server(secret_key));
     while let Some(cur_thread) = threads.pop() {
         cur_thread.join().unwrap();
     }
 }
 
-fn spawn_graphql_server() -> JoinHandle<()> {
+fn spawn_graphql_server(secret_key: Key) -> JoinHandle<()> {
     thread::spawn(|| {
-        match crate::graphql_server::connect() {
+        match crate::graphql_server::connect(secret_key) {
             Ok(_) => {
                 log::info!("Server stopped");
             }
@@ -52,10 +55,10 @@ fn spawn_graphql_server() -> JoinHandle<()> {
     })
 }
 
-fn spawn_api_server() -> JoinHandle<()> {
+fn spawn_api_server(secret_key: Key) -> JoinHandle<()> {
     thread::spawn(|| {
         log::info!("Starting - API Server");
-        match crate::api_server::connect() {
+        match crate::api_server::connect(secret_key) {
             Ok(_) => {
                 log::info!("API Server Stopped");
             }
