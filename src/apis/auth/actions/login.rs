@@ -11,9 +11,12 @@ pub async fn login_post(
     let credentials = credentials.into_inner();
 
     match login_user(credentials).await {
-        Ok(user_found) => session
-            .insert("user_id", user_found.get_id_string())
-            .unwrap(),
+        Ok(user_found) => {
+            log::info!("{:?}", user_found.clone().get_id_string());
+            session
+                .insert("user_id", user_found.get_id_string())
+                .unwrap();
+        }
         Err(_) => return HttpResponse::Unauthorized().json("Unauthorized"),
     };
     HttpResponse::Ok().json("Success")

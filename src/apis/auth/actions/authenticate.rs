@@ -4,6 +4,7 @@ use actix_web::{post, HttpResponse};
 #[post("/authenticate")]
 pub async fn authenticate_post(session: Session) -> HttpResponse {
     let user_id: Option<String> = session.get("user_id").unwrap_or(None);
+    log::info!("{:?}", user_id);
 
     match user_id {
         Some(_) => HttpResponse::Ok().json("Success"),

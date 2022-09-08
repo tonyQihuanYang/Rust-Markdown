@@ -11,7 +11,7 @@ pub type UserId = bson::oid::ObjectId;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
     #[serde(rename = "_id")]
-    pub id: bson::oid::ObjectId,
+    pub id: UserId,
     pub username: String,
     pub password: String,
 }
@@ -32,7 +32,7 @@ impl User {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GeneralUserInformation {
-    #[serde(rename = "_id")]
-    pub id: bson::oid::ObjectId,
-    pub username: String,
+    pub _id: Option<bson::oid::ObjectId>,
+    pub id: Option<String>,
+    pub username: Option<String>,
 }
