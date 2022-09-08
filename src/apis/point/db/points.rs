@@ -1,6 +1,6 @@
 use crate::models::point::{Point, PointWithUserInfo};
 use crate::MONGO_DB;
-use futures::stream::{self, StreamExt};
+use futures::stream::StreamExt;
 use mongodb::bson::doc;
 use mongodb::options::FindOneAndUpdateOptions;
 
